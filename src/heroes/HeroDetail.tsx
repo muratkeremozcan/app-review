@@ -21,9 +21,11 @@ export default function HeroDetail({hero: initHero}: HeroDetailProps) {
   }
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log('handleNameChange')
     setHero({...hero, name: e.target.value})
   }
   const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log('handleDescriptionChange')
     setHero({...hero, description: e.target.value})
   }
 

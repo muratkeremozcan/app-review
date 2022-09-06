@@ -1,4 +1,3 @@
-// src/heroes/HeroDetail.cy.tsx
 import HeroDetail from './HeroDetail'
 import '../styles.scss'
 import {Hero} from 'models/Hero'
@@ -51,8 +50,9 @@ describe('HeroDetail', () => {
       const hero: Hero = {id: '', name: '', description: ''}
       cy.mount(<HeroDetail hero={hero} />)
 
-      cy.getByCy('hero-detail')
+      cy.get('p').then($el => cy.wrap($el.text()).should('equal', ''))
       cy.getByCyLike('input-detail').should('have.length', 2)
+      cy.getByCy('input-detail-id').should('not.exist')
 
       cy.findByPlaceholderText('e.g. Colleen').should('be.visible')
       cy.findByPlaceholderText('e.g. dance fight!').should('be.visible')
