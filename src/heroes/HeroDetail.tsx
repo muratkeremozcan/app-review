@@ -1,4 +1,3 @@
-// src/heroes/HeroDetail.cy.tsx
 import InputDetail from 'components/InputDetail'
 import {useState, ChangeEvent} from 'react'
 import ButtonFooter from 'components/ButtonFooter'
