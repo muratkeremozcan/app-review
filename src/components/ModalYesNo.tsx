@@ -1,4 +1,3 @@
-// src/components/ModalYesNo.tsx
 import Modal from './Modal'
 import {MouseEvent} from 'react'
 

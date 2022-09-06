@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState} from 'react'
+import {ChangeEvent} from 'react'
 
 type InputDetailProps = {
   name: string
@@ -15,11 +15,6 @@ export default function InputDetail({
   onChange,
   readOnly,
 }: InputDetailProps) {
-  const [shownValue, setShownValue] = useState('')
-  useEffect(() => {
-    setShownValue(value)
-  }, [value])
-
   return (
     <div data-cy={`input-detail-${name}`} className="field">
       <label className="label" htmlFor={name}>
@@ -27,7 +22,7 @@ export default function InputDetail({
       </label>
       <input
         name={name}
-        defaultValue={shownValue}
+        defaultValue={value}
         placeholder={placeholder}
         onChange={onChange}
         readOnly={readOnly}

@@ -1,4 +1,3 @@
-// src/components/ListHeader.tsx
 import {MouseEvent} from 'react'
 import {NavLink} from 'react-router-dom'
 import {FiRefreshCcw} from 'react-icons/fi'

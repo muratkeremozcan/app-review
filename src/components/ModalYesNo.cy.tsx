@@ -1,4 +1,3 @@
-// src/components/ModalYesNo.cy.tsx
 import ModalYesNo from './ModalYesNo'
 import '../styles.scss'
 
