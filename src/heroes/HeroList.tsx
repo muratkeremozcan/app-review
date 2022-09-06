@@ -1,13 +1,13 @@
-import CardContent from 'components/CardContent'
-import ButtonFooter from 'components/ButtonFooter'
+import CardContent from '../components/CardContent'
+import ButtonFooter from '../components/ButtonFooter'
 import {FaEdit, FaRegSave} from 'react-icons/fa'
 import {Hero} from 'models/Hero'
 type HeroListProps = {
   heroes: Hero[]
+  handleDeleteHero: () => void // TODO: consider better type
 }
 
-export default function HeroList({heroes}: HeroListProps) {
-  const handleDeleteHero = () => console.log('handleDeleteHero')
+export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
   const handleSelectHero = () => console.log('handleSelectHero')
 
   return (

@@ -1,11 +1,15 @@
-// src/heroes/HeroList.cy.tsx
 import HeroList from './HeroList'
 import '../styles.scss'
-import heroes from '../../cypress/fixtures/heroes.json'
+import heroes from './heroes.json'
 
 describe('HeroList', () => {
   it('should render the item layout', () => {
-    cy.mount(<HeroList heroes={heroes} />)
+    cy.mount(
+      <HeroList
+        heroes={heroes}
+        handleDeleteHero={cy.stub().as('handleDeleteHero')}
+      />,
+    )
 
     cy.getByCyLike('hero-list-item').should('have.length', heroes.length)
 
@@ -25,13 +29,18 @@ describe('HeroList', () => {
         .its('console')
         .then(console => cy.spy(console, 'log').as('log'))
 
-      cy.mount(<HeroList heroes={heroes} />)
+      cy.mount(
+        <HeroList
+          heroes={heroes}
+          handleDeleteHero={cy.stub().as('handleDeleteHero')}
+        />,
+      )
     })
-    it('should handleDeleteHero', () => {
+    it('should handle delete', () => {
       cy.getByCy('delete-button').first().click()
-      cy.get('@log').should('have.been.calledWith', 'handleDeleteHero')
+      cy.get('@handleDeleteHero').should('have.been.called')
     })
-    it('should handleSelectHero', () => {
+    it('should handle edit', () => {
       cy.getByCy('edit-button').first().click()
       cy.get('@log').should('have.been.calledWith', 'handleSelectHero')
     })
