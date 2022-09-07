@@ -1,14 +1,25 @@
-import InputDetail from 'components/InputDetail'
+// src/heroes/HeroDetail.tsx
+import InputDetail from '../components/InputDetail'
 import {useState, ChangeEvent} from 'react'
-import ButtonFooter from 'components/ButtonFooter'
+import ButtonFooter from '../components/ButtonFooter'
 import {FaUndo, FaRegSave} from 'react-icons/fa'
-import {Hero} from 'models/Hero'
 
+export type Hero = {
+  id: string
+  name: string
+  description: string
+}
 type HeroDetailProps = {
-  hero: Hero
+  hero?: Hero
 }
 
-export default function HeroDetail({hero: initHero}: HeroDetailProps) {
+export default function HeroDetail({
+  hero: initHero = {
+    id: '',
+    name: '',
+    description: '',
+  },
+}: HeroDetailProps) {
   const [hero, setHero] = useState<Hero>({...initHero})
 
   const handleCancel = () => console.log('handleCancel')
