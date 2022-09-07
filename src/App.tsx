@@ -1,23 +1,28 @@
-import React from 'react'
-import logo from './logo.svg'
-import './App.css'
+// src/App.tsx
+import About from 'About'
+import HeaderBar from 'components/HeaderBar'
+import NavBar from 'components/NavBar'
+import NotFound from 'components/NotFound'
+import Heroes from 'heroes/Heroes'
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
+import './styles.scss'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p data-cy="greeting">Hello.</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <HeaderBar />
+      <div className="section columns">
+        <NavBar />
+        <main className="column">
+          <Routes>
+            <Route path="/" element={<Navigate replace to="/heroes" />} />
+            <Route path="/heroes" element={<Heroes />} />
+            <Route path="/about" element={<About />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   )
 }
 
