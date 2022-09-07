@@ -1,28 +1,19 @@
 // src/heroes/HeroDetail.tsx
-import InputDetail from '../components/InputDetail'
 import {useState, ChangeEvent} from 'react'
-import ButtonFooter from '../components/ButtonFooter'
+import {useNavigate, useParams, useSearchParams} from 'react-router-dom'
 import {FaUndo, FaRegSave} from 'react-icons/fa'
+import InputDetail from '../components/InputDetail'
+import ButtonFooter from '../components/ButtonFooter'
 
-export type Hero = {
-  id: string
-  name: string
-  description: string
-}
-type HeroDetailProps = {
-  hero?: Hero
-}
+export default function HeroDetail() {
+  const {id} = useParams()
+  const [searchParams] = useSearchParams()
+  const name = searchParams.get('name')
+  const description = searchParams.get('description')
+  const navigate = useNavigate()
+  const [hero, setHero] = useState({id, name, description})
 
-export default function HeroDetail({
-  hero: initHero = {
-    id: '',
-    name: '',
-    description: '',
-  },
-}: HeroDetailProps) {
-  const [hero, setHero] = useState<Hero>({...initHero})
-
-  const handleCancel = () => console.log('handleCancel')
+  const handleCancel = () => navigate('/heroes')
   const updateHero = () => console.log('updateHero')
   const saveHero = () => console.log('saveHero')
   const handleSave = () => {
@@ -47,22 +38,18 @@ export default function HeroDetail({
       </header>
       <div className="card-content">
         <div className="content">
-          {hero.id && (
-            <InputDetail
-              name={'id'}
-              value={hero.id}
-              readOnly={true}
-            ></InputDetail>
+          {id && (
+            <InputDetail name={'id'} value={id} readOnly={true}></InputDetail>
           )}
           <InputDetail
             name={'name'}
-            value={hero.name}
+            value={name ? name : ''}
             placeholder="e.g. Colleen"
             onChange={handleNameChange}
           ></InputDetail>
           <InputDetail
             name={'description'}
-            value={hero.description}
+            value={description ? description : ''}
             placeholder="e.g. dance fight!"
             onChange={handleDescriptionChange}
           ></InputDetail>

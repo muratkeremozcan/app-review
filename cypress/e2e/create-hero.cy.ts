@@ -2,8 +2,8 @@
 // TODO: enhance this test when the backend is operational
 
 describe('Create hero', () => {
-  beforeEach(() => cy.visit('/'))
-  it('should go through the cancel flow', () => {
+  it('should go through the refresh flow', () => {
+    cy.visit('/')
     cy.location('pathname').should('eq', '/heroes')
 
     cy.getByCy('add-button').click()
@@ -12,6 +12,14 @@ describe('Create hero', () => {
     cy.getByCy('input-detail-id').should('not.exist')
 
     cy.getByCy('refresh-button').click()
+    cy.location('pathname').should('eq', '/heroes')
+    cy.getByCy('hero-list').should('be.visible')
+  })
+
+  it('should go through the cancel flow', () => {
+    cy.visit('/heroes/add-hero')
+
+    cy.getByCy('cancel-button').click()
     cy.location('pathname').should('eq', '/heroes')
     cy.getByCy('hero-list').should('be.visible')
   })
