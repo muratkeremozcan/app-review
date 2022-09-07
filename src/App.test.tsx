@@ -1,9 +1,18 @@
-import React from 'react'
+// src/App.test.tsx
 import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import App from './App'
 
-test('renders learn react link', () => {
+test('renders tour of heroes', async () => {
   render(<App />)
-  const linkElement = screen.getByText(/learn react/i)
-  expect(linkElement).toBeInTheDocument()
+  // there is no concept of url in virtual DOM,
+  // therefore 'not-found' component is not relevant here
+
+  await userEvent.click(screen.getByText('About'))
+  expect(screen.getByTestId('about')).toBeVisible()
+
+  await userEvent.click(screen.getByText('Heroes'))
+  expect(screen.getByTestId('heroes')).toBeVisible()
 })
+
+// CT vs RTL: src/App.cy.tsx
