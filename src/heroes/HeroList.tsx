@@ -1,3 +1,5 @@
+// src/heroes/HeroList.tsx
+import {useNavigate} from 'react-router-dom'
 import CardContent from '../components/CardContent'
 import ButtonFooter from '../components/ButtonFooter'
 import {FaEdit, FaRegSave} from 'react-icons/fa'
@@ -8,7 +10,13 @@ type HeroListProps = {
 }
 
 export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
-  const handleSelectHero = () => console.log('handleSelectHero')
+  const navigate = useNavigate()
+  const handleSelectHero = (heroId: string) => {
+    const hero = heroes.find((h: Hero) => h.id === heroId)
+    navigate(
+      `/heroes/edit-hero/${hero?.id}?name=${hero?.name}&description=${hero?.description}`,
+    )
+  }
 
   return (
     <ul data-cy="hero-list" className="list">
@@ -25,7 +33,7 @@ export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
               <ButtonFooter
                 label="Edit"
                 IconClass={FaEdit}
-                onClick={handleSelectHero}
+                onClick={() => handleSelectHero(hero.id)}
               />
             </footer>
           </div>

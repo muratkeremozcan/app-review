@@ -1,54 +1,59 @@
 import HeroDetail from './HeroDetail'
 import '../styles.scss'
-import {Hero} from 'models/Hero'
 import React from 'react'
+import {BrowserRouter} from 'react-router-dom'
 
 describe('HeroDetail', () => {
   context('handleSave, handleCancel', () => {
     beforeEach(() => {
-      cy.window()
-        .its('console')
-        .then(console => cy.spy(console, 'log').as('log'))
-
-      const hero: Hero = {id: '', name: '', description: ''}
-      cy.mount(<HeroDetail hero={hero} />)
+      cy.mount(
+        <BrowserRouter>
+          <HeroDetail />
+        </BrowserRouter>,
+      )
     })
     it('should handle Save', () => {
       cy.getByCy('save-button').click()
-      cy.get('@log').should('have.been.calledWith', 'handleSave')
+      // TODO spy on something when the network request is made in the future
     })
 
     it('should handle Cancel', () => {
       cy.getByCy('cancel-button').click()
-      cy.get('@log').should('have.been.calledWith', 'handleCancel')
+      cy.location('pathname').should('eq', '/heroes')
     })
   })
 
   context('handleNameChange, handleDescriptionChange', () => {
     beforeEach(() => {
-      cy.spy(React, 'useState').as('useState')
-      const hero: Hero = {id: '', name: '', description: ''}
-      cy.mount(<HeroDetail hero={hero} />)
+      cy.mount(
+        <BrowserRouter>
+          <HeroDetail />
+        </BrowserRouter>,
+      )
     })
 
     it('should handle name change', () => {
       const newHeroName = 'abc'
       cy.getByCy('input-detail-name').type(newHeroName)
 
-      cy.get('@useState').should('have.been.called')
+      cy.findByDisplayValue(newHeroName).should('be.visible')
     })
 
     it('should handle description change', () => {
       const newHeroDescription = '123'
       cy.getByCy('input-detail-description').type(newHeroDescription)
-      cy.get('@useState').should('have.been.called')
+
+      cy.findByDisplayValue(newHeroDescription).should('be.visible')
     })
   })
 
   context('state: should verify the layout of the component', () => {
     it('id: false, name: false - should verify the minimal state of the component', () => {
-      const hero: Hero = {id: '', name: '', description: ''}
-      cy.mount(<HeroDetail hero={hero} />)
+      cy.mount(
+        <BrowserRouter>
+          <HeroDetail />{' '}
+        </BrowserRouter>,
+      )
 
       cy.get('p').then($el => cy.wrap($el.text()).should('equal', ''))
       cy.getByCyLike('input-detail').should('have.length', 2)

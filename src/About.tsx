@@ -1,6 +1,3 @@
-// src/About.tsx
-import React from 'react'
-
 const About = () => (
   <div data-cy="about" className="content-container">
     <div className="content-title-group not-found">

@@ -1,14 +1,18 @@
+// src/heroes/HeroList.cy.tsx
+import {BrowserRouter} from 'react-router-dom'
 import HeroList from './HeroList'
 import '../styles.scss'
-import heroes from './heroes.json'
+import heroes from '../../cypress/fixtures/heroes.json'
 
 describe('HeroList', () => {
   it('should render the item layout', () => {
     cy.mount(
-      <HeroList
-        heroes={heroes}
-        handleDeleteHero={cy.stub().as('handleDeleteHero')}
-      />,
+      <BrowserRouter>
+        <HeroList
+          heroes={heroes}
+          handleDeleteHero={cy.stub().as('handleDeleteHero')}
+        />
+      </BrowserRouter>,
     )
 
     cy.getByCyLike('hero-list-item').should('have.length', heroes.length)
@@ -25,15 +29,13 @@ describe('HeroList', () => {
 
   context('handleDelete, handleEdit', () => {
     beforeEach(() => {
-      cy.window()
-        .its('console')
-        .then(console => cy.spy(console, 'log').as('log'))
-
       cy.mount(
-        <HeroList
-          heroes={heroes}
-          handleDeleteHero={cy.stub().as('handleDeleteHero')}
-        />,
+        <BrowserRouter>
+          <HeroList
+            heroes={heroes}
+            handleDeleteHero={cy.stub().as('handleDeleteHero')}
+          />
+        </BrowserRouter>,
       )
     })
     it('should handle delete', () => {
@@ -42,7 +44,7 @@ describe('HeroList', () => {
     })
     it('should handle edit', () => {
       cy.getByCy('edit-button').first().click()
-      cy.get('@log').should('have.been.calledWith', 'handleSelectHero')
+      cy.location('pathname').should('eq', '/heroes/edit-hero/' + heroes[0].id)
     })
   })
 })
