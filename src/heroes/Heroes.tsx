@@ -2,12 +2,14 @@ import {useNavigate, Routes, Route} from 'react-router-dom'
 import ListHeader from 'components/ListHeader'
 import ModalYesNo from 'components/ModalYesNo'
 import HeroList from './HeroList'
-import heroes from './heroes.json'
 import {useState} from 'react'
 import HeroDetail from './HeroDetail'
+import useAxios from 'hooks/useAxios'
 
 export default function Heroes() {
   const [showModal, setShowModal] = useState<boolean>(false)
+  const {data: heroes = []} = useAxios('heroes')
+
   const navigate = useNavigate()
   const addNewHero = () => navigate('/heroes/add-hero')
   const handleRefresh = () => navigate('/heroes')

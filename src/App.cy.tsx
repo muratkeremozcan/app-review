@@ -2,6 +2,10 @@ import App from './App'
 
 describe('ct sanity', () => {
   it('should render the App', () => {
+    cy.intercept('GET', `${Cypress.env('API_URL')}/heroes`, {
+      fixture: 'heroes.json',
+    }).as('getHeroes')
+
     cy.mount(<App />)
     cy.getByCy('not-found').should('be.visible')
 

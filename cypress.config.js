@@ -1,3 +1,6 @@
+// cypress.config.js
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const {defineConfig} = require('cypress')
 
 module.exports = defineConfig({
@@ -5,6 +8,9 @@ module.exports = defineConfig({
   retries: {
     runMode: 2,
     openMode: 0,
+  },
+  env: {
+    API_URL: 'http://localhost:4000/api',
   },
   e2e: {
     specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
