@@ -20,7 +20,7 @@ describe('InputDetail', () => {
     cy.contains('label', name)
     cy.findByPlaceholderText(placeholder).clear().type(newValue)
     cy.get('input').should('have.value', newValue)
-    cy.get('@onChange').should('have.been.calledThrice')
+    cy.get('@onChange').should('have.been.calledTwice')
   })
 
   it('should not allow the input field to be modified', () => {

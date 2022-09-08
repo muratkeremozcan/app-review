@@ -1,7 +1,7 @@
 // cypress/e2e/create-hero.cy.ts
 describe('Create hero', () => {
   it('should go through the refresh flow', () => {
-    cy.intercept('GET', 'http://localhost:4000/api/heroes').as('getHeroes')
+    cy.intercept('GET', `${Cypress.env('API_URL')}/heroes`).as('getHeroes')
     cy.visit('/')
     cy.wait('@getHeroes')
     cy.location('pathname').should('eq', '/heroes')
@@ -17,7 +17,7 @@ describe('Create hero', () => {
   })
 
   it('should go through the cancel flow and perform direct navigation', () => {
-    cy.intercept('GET', 'http://localhost:4000/api/heroes').as('getHeroes')
+    cy.intercept('GET', `${Cypress.env('API_URL')}/heroes`).as('getHeroes')
     cy.visit('/heroes/add-hero')
     cy.wait('@getHeroes')
 

@@ -23,7 +23,7 @@ export default function Heroes() {
   }
 
   const getData = useCallback(async () => {
-    const response = await axios.get('http://localhost:4000/api/heroes')
+    const response = await axios.get(`${process.env.REACT_APP_URL}/heroes`)
     return parseList(response)
   }, [])
 
