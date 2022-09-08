@@ -1,6 +1,5 @@
-// src/heroes/HeroDetail.tsx
-import {useNavigate, Routes, Route, Navigate} from 'react-router-dom'
-import ListHeader from '../components/ListHeader'
+import {useNavigate, Routes, Route} from 'react-router-dom'
+import ListHeader from 'components/ListHeader'
 import ModalYesNo from 'components/ModalYesNo'
 import HeroList from './HeroList'
 import heroes from './heroes.json'

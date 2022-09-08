@@ -1,6 +1,4 @@
 // cypress/e2e/create-hero.cy.ts
-// TODO: enhance this test when the backend is operational
-
 describe('Create hero', () => {
   it('should go through the refresh flow', () => {
     cy.visit('/')
@@ -16,7 +14,7 @@ describe('Create hero', () => {
     cy.getByCy('hero-list').should('be.visible')
   })
 
-  it('should go through the cancel flow', () => {
+  it('should go through the cancel flow and perform direct navigation', () => {
     cy.visit('/heroes/add-hero')
 
     cy.getByCy('cancel-button').click()

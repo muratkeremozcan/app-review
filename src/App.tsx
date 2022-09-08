@@ -1,4 +1,3 @@
-// src/App.tsx
 import About from './About'
 import HeaderBar from 'components/HeaderBar'
 import NavBar from 'components/NavBar'
