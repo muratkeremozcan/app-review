@@ -5,7 +5,7 @@ import '../styles.scss'
 
 describe('Heroes', () => {
   beforeEach(() => {
-    cy.intercept('GET', `${Cypress.env('API_URL')}/heroes`, {
+    cy.intercept('GET', `http://localhost:4000/api/heroes`, {
       fixture: 'heroes.json',
     }).as('getHeroes')
   })
