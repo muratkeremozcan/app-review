@@ -1,0 +1,38 @@
+## Summary
+
+We wrote a failing e2e test spying on an expected http GET call to /heroes route as the application loads (Red 1).
+
+We added a `useEffect` that gets the data with an `axios.get` call targeting the /heroes route (Green 1).
+
+<br />
+
+We removed the json file import to get the data utilized `useState`, while setting the hero array within the `useEffect` (Red 2, Green 2).
+
+<br />
+
+We used an empty array to have the http GET effect occur only once. We showcased `useCallback` to wrap expensive functions. 
+
+We updated the component tests and the unit test to be network aware and stub the network with `cy.intercept` for Cypress and `msw` for RTL.
+
+We updated the e2e tests to wait for the network so that ui assertions can begin after the DOM settles.
+
+<br />
+
+We added a new e2e test to cover an alternate hero add flow; navigating to add hero from edit hero (Red 3).
+
+To address the failure, we managed the state where it is most relevant; `InputDetail` component. We only used `useState` and `useEffect`. (Green 3)
+
+<br />
+
+We refactored the hard coded api route to an environment variable. We used a hook `useAxios` to yield the data at the component in an abstracted way.
+
+<br />
+
+## Takeaways
+* `useEffect` dependency array:
+	* `useEffect(fn, [a, b, c])` -> run the effect when a, or b, or c change
+	* `useEffect(fn, [a])` -> run the effect when a changes
+	* `useEffect(fn, [])` -> run the effect when... nothing changes, that's why it runs just once
+	* `useEffect(fn)` -> run the effect at every render
+
+* Similar to routing, when our concerns about the app are higher level as in state management and flows, e2e tests are effective at catching defects that we might not be able to cover with component tests.

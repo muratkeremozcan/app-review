@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import axios from 'axios'
 
 const getItem = (route: string) =>
@@ -17,6 +17,10 @@ export default function useAxios(url: string) {
   const [error, setError] = useState(null)
   const [status, setStatus] = useState('idle')
 
+  const getItemCb = useCallback((route: string) => {
+    return getItem(route)
+  }, [])
+
   // When fetching data within a call to useEffect,
   // combine a local variable and the cleanup function
   // in order to match a data request with its response:
@@ -32,7 +36,7 @@ export default function useAxios(url: string) {
     setError(null)
     setStatus('loading')
 
-    getItem(url)
+    getItemCb(url)
       .then(data => {
         if (doUpdate) {
           setData(data)
