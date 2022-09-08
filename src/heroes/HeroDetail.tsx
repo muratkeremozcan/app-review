@@ -1,15 +1,13 @@
-// src/heroes/HeroDetail.tsx
 import {useState, ChangeEvent} from 'react'
-import {useNavigate, useParams, useSearchParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {FaUndo, FaRegSave} from 'react-icons/fa'
-import InputDetail from '../components/InputDetail'
-import ButtonFooter from '../components/ButtonFooter'
+import InputDetail from 'components/InputDetail'
+import ButtonFooter from 'components/ButtonFooter'
+import {useHeroParams} from 'hooks/useHeroParams'
 
 export default function HeroDetail() {
   const {id} = useParams()
-  const [searchParams] = useSearchParams()
-  const name = searchParams.get('name')
-  const description = searchParams.get('description')
+  const {name, description} = useHeroParams()
   const navigate = useNavigate()
   const [hero, setHero] = useState({id, name, description})
 
