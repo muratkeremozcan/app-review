@@ -1,6 +1,5 @@
 import {FaUndo, FaRegSave, FaEdit, FaTrash} from 'react-icons/fa'
 import {MouseEvent} from 'react'
-import '../styles.scss'
 
 type ButtonFooterProps = {
   label: 'Cancel' | 'Save' | 'Edit' | 'Delete'

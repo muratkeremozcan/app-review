@@ -1,5 +1,9 @@
-// cypress/e2e/routes-nav.cy.ts
-describe('e2e sanity', () => {
+describe('routes navigation (ui-integration)', () => {
+  beforeEach(() => {
+    cy.intercept('GET', `${Cypress.env('API_URL')}/heroes`, {
+      fixture: 'heroes',
+    }).as('stubbedGetHeroes')
+  })
   it('should land on baseUrl, redirect to /heroes', () => {
     cy.visit('/')
     cy.getByCy('header-bar').should('be.visible')

@@ -1,8 +1,8 @@
+import {useState} from 'react'
 import {useNavigate, Routes, Route} from 'react-router-dom'
 import ListHeader from 'components/ListHeader'
 import ModalYesNo from 'components/ModalYesNo'
 import HeroList from './HeroList'
-import {useState} from 'react'
 import HeroDetail from './HeroDetail'
 import {useGetHeroes} from 'hooks/useGetHeroes'
 import {useDeleteHero} from 'hooks/useDeleteHero'
@@ -27,7 +27,6 @@ export default function Heroes() {
     setHeroToDelete(hero)
     setShowModal(true)
   }
-
   const handleDeleteFromModal = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     deleteHero(heroToDelete!)

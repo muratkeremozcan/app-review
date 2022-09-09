@@ -1,4 +1,3 @@
-// src/heroes/HeroList.tsx
 import {useNavigate} from 'react-router-dom'
 import CardContent from 'components/CardContent'
 import ButtonFooter from 'components/ButtonFooter'

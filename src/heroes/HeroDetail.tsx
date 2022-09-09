@@ -9,25 +9,20 @@ import {Hero} from 'models/Hero'
 import {usePutHero} from 'hooks/usePutHero'
 
 export default function HeroDetail() {
-  const navigate = useNavigate()
   const {id} = useParams()
   const {name, description} = useHeroParams()
   const [hero, setHero] = useState({id, name, description})
   const {mutate: createHero, status, error: postError} = usePostHero()
   const {updateHero, isUpdating, isUpdateError} = usePutHero()
 
+  const navigate = useNavigate()
   const handleCancel = () => navigate('/heroes')
-  const handleSave = () => {
-    console.log('handleSave')
-    return name ? updateHero(hero as Hero) : createHero(hero as Hero)
-  }
-
+  const handleSave = () =>
+    name ? updateHero(hero as Hero) : createHero(hero as Hero)
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('handleNameChange')
     setHero({...hero, name: e.target.value})
   }
   const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('handleDescriptionChange')
     setHero({...hero, description: e.target.value})
   }
 

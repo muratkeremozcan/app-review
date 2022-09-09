@@ -8,7 +8,7 @@ describe('Backend e2e', () => {
     expect(entity.description).to.be.a('string')
   }
 
-  beforeEach(() => cy.resetData())
+  before(() => cy.resetData())
 
   it('should GET heroes and villains ', () => {
     cy.crud('GET', 'heroes')
