@@ -1,17 +1,19 @@
-// src/heroes/HeroList.tsx
 import {useNavigate} from 'react-router-dom'
 import CardContent from 'components/CardContent'
 import ButtonFooter from 'components/ButtonFooter'
 import {FaEdit, FaRegSave} from 'react-icons/fa'
+import {MouseEvent} from 'react'
 import {Hero} from 'models/Hero'
+
 type HeroListProps = {
   heroes: Hero[]
-  handleDeleteHero: () => void // TODO: consider better type
+  handleDeleteHero: (hero: Hero) => (e: MouseEvent<HTMLButtonElement>) => void
 }
 
 export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
   const navigate = useNavigate()
-  const handleSelectHero = (heroId: string) => {
+  // currying: the outer fn takes our custom arg and returns a fn that takes the event
+  const handleSelectHero = (heroId: string) => () => {
     const hero = heroes.find((h: Hero) => h.id === heroId)
     navigate(
       `/heroes/edit-hero/${hero?.id}?name=${hero?.name}&description=${hero?.description}`,
@@ -28,12 +30,12 @@ export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
               <ButtonFooter
                 label="Delete"
                 IconClass={FaRegSave}
-                onClick={handleDeleteHero}
+                onClick={handleDeleteHero(hero)}
               />
               <ButtonFooter
                 label="Edit"
                 IconClass={FaEdit}
-                onClick={() => handleSelectHero(hero.id)}
+                onClick={handleSelectHero(hero.id)}
               />
             </footer>
           </div>

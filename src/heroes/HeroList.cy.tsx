@@ -1,4 +1,3 @@
-// src/heroes/HeroList.cy.tsx
 import {BrowserRouter} from 'react-router-dom'
 import HeroList from './HeroList'
 import '../styles.scss'

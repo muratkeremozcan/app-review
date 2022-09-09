@@ -4,34 +4,32 @@ import {FaUndo, FaRegSave} from 'react-icons/fa'
 import InputDetail from 'components/InputDetail'
 import ButtonFooter from 'components/ButtonFooter'
 import {useHeroParams} from 'hooks/useHeroParams'
+import {usePostHero} from 'hooks/usePostHero'
+import {Hero} from 'models/Hero'
+import {usePutHero} from 'hooks/usePutHero'
 
 export default function HeroDetail() {
   const {id} = useParams()
   const {name, description} = useHeroParams()
-  const navigate = useNavigate()
   const [hero, setHero] = useState({id, name, description})
+  const {mutate: createHero, status, error: postError} = usePostHero()
+  const {updateHero, isUpdating, isUpdateError} = usePutHero()
 
+  const navigate = useNavigate()
   const handleCancel = () => navigate('/heroes')
-  const updateHero = () => console.log('updateHero')
-  const saveHero = () => console.log('saveHero')
-  const handleSave = () => {
-    console.log('handleSave')
-    return hero.name ? updateHero() : saveHero()
-  }
-
+  const handleSave = () =>
+    name ? updateHero(hero as Hero) : createHero(hero as Hero)
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('handleNameChange')
     setHero({...hero, name: e.target.value})
   }
   const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('handleDescriptionChange')
     setHero({...hero, description: e.target.value})
   }
 
   return (
     <div data-cy="hero-detail" className="card edit-detail">
       <header className="card-header">
-        <p className="card-header-title">{hero.name}</p>
+        <p className="card-header-title">{name}</p>
         &nbsp;
       </header>
       <div className="card-content">

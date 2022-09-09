@@ -42,6 +42,31 @@ declare global {
         options?: MountOptions,
       ): Cypress.Chainable<MountReturn>
 
+      /** Visits baseUrl, uses real network, verifies path */
+      visitHeroes(): Cypress.Chainable<string>
+
+      /** Visits baseUrl, uses stubbed network, verifies path */
+      visitStubbedHeroes(): Cypress.Chainable<string>
+
+      /**
+       * Gets an entity by name.
+       * ```js
+       * cy.getEntityByName(newHero.name).then(myHero => ...)
+       * ```
+       * @param name: Hero['name']
+       */
+      getEntityByProperty(
+        property: Hero['name'] | Hero['description'] | Hero['id'],
+      ): Cypress.Chainable<Hero>
+
+      /**
+       * Given a hero property (name, description or id),
+       * returns the index of the hero, and the entire collection, as an object.
+       */
+      findHeroIndex(
+        property: Hero['name'] | Hero['description'] | Hero['id'],
+      ): Cypress.Chainable<{heroIndex: number; heroesArray: Hero[]}>
+
       /**
        * Performs crud operations GET, POST, PUT and DELETE.
        *

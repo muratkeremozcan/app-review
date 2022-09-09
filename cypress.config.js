@@ -1,5 +1,3 @@
-// cypress.config.js
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const {defineConfig} = require('cypress')
 

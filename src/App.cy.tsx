@@ -16,3 +16,5 @@ describe('ct sanity', () => {
     cy.getByCy('about').should('be.visible')
   })
 })
+
+// CT vs RTL: src/App.test.tsx
