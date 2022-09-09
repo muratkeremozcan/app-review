@@ -5,24 +5,33 @@ import HeroList from './HeroList'
 import {useState} from 'react'
 import HeroDetail from './HeroDetail'
 import {useGetHeroes} from 'hooks/useGetHeroes'
+import {useDeleteHero} from 'hooks/useDeleteHero'
+import {Hero} from 'models/Hero'
 
 export default function Heroes() {
   const [showModal, setShowModal] = useState<boolean>(false)
   const {data: heroes = []} = useGetHeroes()
+  const [heroToDelete, setHeroToDelete] = useState<Hero | null>(null)
+  const {deleteHero, isDeleteError} = useDeleteHero()
 
   const navigate = useNavigate()
   const addNewHero = () => navigate('/heroes/add-hero')
   const handleRefresh = () => navigate('/heroes')
 
   const handleCloseModal = () => {
+    setHeroToDelete(null)
     setShowModal(false)
   }
-  const handleDeleteHero = () => {
+  // currying: the outer fn takes our custom arg and returns a fn that takes the event
+  const handleDeleteHero = (hero: Hero) => () => {
+    setHeroToDelete(hero)
     setShowModal(true)
   }
+
   const handleDeleteFromModal = () => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    deleteHero(heroToDelete!)
     setShowModal(false)
-    console.log('handleDeleteFromModal')
   }
 
   return (

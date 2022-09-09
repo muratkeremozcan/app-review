@@ -45,8 +45,10 @@ describe('Create hero', () => {
     cy.getByCy('save-button').click()
 
     cy.location('pathname').should('eq', '/heroes')
+
+    cy.getByCy('heroes').should('be.visible')
+    cy.getByCyLike('hero-list-item').should('have.length.gt', 0)
     cy.getByCy('hero-list')
-      .should('be.visible')
       .should('contain', newHero.name)
       .and('contain', newHero.description)
 

@@ -61,11 +61,11 @@ declare global {
 
       /**
        * Given a hero property (name, description or id),
-       * returns the index of the hero in the collection
+       * returns the index of the hero, and the entire collection, as an object.
        */
       findHeroIndex(
         property: Hero['name'] | Hero['description'] | Hero['id'],
-      ): Cypress.Chainable<number>
+      ): Cypress.Chainable<{heroIndex: number; heroesArray: Hero[]}>
 
       /**
        * Performs crud operations GET, POST, PUT and DELETE.

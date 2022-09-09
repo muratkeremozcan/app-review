@@ -52,7 +52,10 @@ Cypress.Commands.add('getEntityByProperty', (property: HeroProperty) =>
 )
 
 Cypress.Commands.add('findHeroIndex', (property: HeroProperty) =>
-  getHeroes().then((body: Hero[]) => _.findIndex(body, propExists(property))),
+  getHeroes().then((body: Hero[]) => ({
+    heroIndex: _.findIndex(body, propExists(property)),
+    heroesArray: body,
+  })),
 )
 
 Cypress.Commands.add('visitStubbedHeroes', () => {
