@@ -1,56 +1,85 @@
+import {faker} from '@faker-js/faker'
+import {Hero} from '../../src/models/Hero'
 describe('Edit hero', () => {
-  beforeEach(() => {
-    cy.intercept('GET', `${Cypress.env('API_URL')}/heroes`).as('getHeroes')
-    cy.visit('/')
-    cy.wait('@getHeroes')
+  before(cy.resetData)
+
+  /** Verifies hero info on Edit page */
+  const verifyHero = (heroes: Hero[], heroIndex: number) => {
+    cy.location('pathname').should('include', '/heroes/edit-hero/')
+    cy.getByCy('hero-detail').should('be.visible')
+    cy.getByCy('input-detail-id').should('be.visible')
+    cy.findByDisplayValue(heroes[heroIndex].id)
+    cy.findByDisplayValue(heroes[heroIndex].name)
+    cy.findByDisplayValue(heroes[heroIndex].description)
+  }
+
+  const randomHeroIndex = (heroes: Hero[]) =>
+    Cypress._.random(0, heroes.length - 1)
+
+  it('should go through the cancel flow for a random hero (ui-integration)', () => {
+    cy.visitStubbedHeroes()
+
+    cy.fixture('heroes').then(heroes => {
+      const heroIndex = randomHeroIndex(heroes)
+      cy.getByCy('edit-button').eq(heroIndex).click()
+      verifyHero(heroes, heroIndex)
+    })
+
+    cy.getByCy('cancel-button').click()
     cy.location('pathname').should('eq', '/heroes')
-  })
-  it('should go through the cancel flow', () => {
-    cy.fixture('heroes').then(heroes => {
-      cy.getByCy('edit-button').eq(0).click()
-      cy.location('pathname').should(
-        'include',
-        `/heroes/edit-hero/${heroes[0].id}`,
-      )
-      cy.getByCy('hero-detail').should('be.visible')
-      cy.getByCy('input-detail-id').should('be.visible')
-      cy.findByDisplayValue(heroes[0].id).should('be.visible')
-      cy.findByDisplayValue(heroes[0].name).should('be.visible')
-      cy.findByDisplayValue(heroes[0].description).should('be.visible')
-
-      cy.getByCy('cancel-button').click()
-      cy.location('pathname').should('eq', '/heroes')
-      cy.getByCy('hero-list').should('be.visible')
-    })
+    cy.getByCy('hero-list').should('be.visible')
   })
 
-  it('should go through the cancel flow for another hero', () => {
-    cy.fixture('heroes').then(heroes => {
-      cy.getByCy('edit-button').eq(1).click()
-      cy.location('pathname').should(
-        'include',
-        `/heroes/edit-hero/${heroes[1].id}`,
-      )
-      cy.getByCy('hero-detail').should('be.visible')
-      cy.getByCy('input-detail-id').should('be.visible')
-      cy.findByDisplayValue(heroes[1].id).should('be.visible')
-      cy.findByDisplayValue(heroes[1].name).should('be.visible')
-      cy.findByDisplayValue(heroes[1].description).should('be.visible')
+  it('should navigate to add from an existing hero (ui-integration)', () => {
+    cy.visitStubbedHeroes()
 
-      cy.getByCy('cancel-button').click()
-      cy.location('pathname').should('eq', '/heroes')
-      cy.getByCy('hero-list').should('be.visible')
-    })
-  })
-
-  it('should navigate to add from an existing hero', () => {
     cy.fixture('heroes').then(heroes => {
-      cy.getByCy('edit-button').eq(1).click()
+      const heroIndex = randomHeroIndex(heroes)
+      cy.getByCy('edit-button').eq(heroIndex).click()
+      verifyHero(heroes, heroIndex)
 
       cy.getByCy('add-button').click()
       cy.getByCy('input-detail-id').should('not.exist')
-      cy.findByDisplayValue(heroes[1].name).should('not.exist')
-      cy.findByDisplayValue(heroes[1].description).should('not.exist')
+      cy.findByDisplayValue(heroes[heroIndex].name).should('not.exist')
+      cy.findByDisplayValue(heroes[heroIndex].description).should('not.exist')
     })
+  })
+
+  it('should go through the edit flow (ui-e2e)', () => {
+    const newHero: Hero = {
+      id: faker.datatype.uuid(),
+      name: faker.internet.userName(),
+      description: `description ${faker.internet.userName()}`,
+    }
+
+    cy.crud('POST', 'heroes', {body: newHero})
+
+    cy.visit(`heroes/edit-hero/${newHero.id}`, {
+      qs: {name: newHero.name, description: newHero.description},
+    })
+
+    const editedHero = {
+      name: faker.internet.userName(),
+      description: `description ${faker.internet.userName()}`,
+    }
+
+    cy.getByCy('input-detail-name')
+      .find('.input')
+      .clear()
+      .type(`${editedHero.name}`)
+    cy.getByCy('input-detail-description')
+      .find('.input')
+      .clear()
+      .type(`${editedHero.description}`)
+    cy.getByCy('save-button').click()
+
+    cy.getByCy('hero-list')
+      .should('be.visible')
+      .should('contain', editedHero.name)
+      .and('contain', editedHero.description)
+
+    cy.getEntityByProperty(newHero.id).then(myHero =>
+      cy.crud('DELETE', `heroes/${myHero.id}`),
+    )
   })
 })

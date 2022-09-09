@@ -1,5 +1,5 @@
-import type {Hero} from '../../support/commands'
 import {faker} from '@faker-js/faker'
+import {Hero} from '../../../src/models/Hero'
 
 describe('Backend e2e', () => {
   const assertProperties = (entity: Hero) => {
