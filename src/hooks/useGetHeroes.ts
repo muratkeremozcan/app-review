@@ -8,9 +8,20 @@ import {getItem} from './api'
 // Whenever any component subsequently calls useQuery with the key,
 // React Query will return the previously fetched  data from its cache
 // and then fetch the latest data in the background (very similar to PWAs and service workers)
-
+// useQuery takes a third arg as a configuration option
+// which tells useQuery to suspend (throw a promise) when loading its initial data
 /**
  * Helper for GET to `/heroes` route
- * @returns {object} {data, status, error}
+ * @returns {object} {heroes, status, getError}
  */
-export const useGetHeroes = () => useQuery('heroes', () => getItem('heroes'))
+export const useGetHeroes = () => {
+  const query = useQuery('heroes', () => getItem('heroes'), {
+    suspense: true,
+  })
+
+  return {
+    heroes: query.data,
+    status: query.status,
+    getError: query.error,
+  }
+}
