@@ -2,6 +2,8 @@ import {useState} from 'react'
 import {useNavigate, Routes, Route} from 'react-router-dom'
 import ListHeader from 'components/ListHeader'
 import ModalYesNo from 'components/ModalYesNo'
+import PageSpinner from 'components/PageSpinner'
+import ErrorComp from 'components/ErrorComp'
 import HeroList from './HeroList'
 import HeroDetail from './HeroDetail'
 import {useGetHeroes} from 'hooks/useGetHeroes'
@@ -10,7 +12,7 @@ import {Hero} from 'models/Hero'
 
 export default function Heroes() {
   const [showModal, setShowModal] = useState<boolean>(false)
-  const {data: heroes = []} = useGetHeroes()
+  const {heroes, status, getError} = useGetHeroes()
   const [heroToDelete, setHeroToDelete] = useState<Hero | null>(null)
   const {deleteHero, isDeleteError} = useDeleteHero()
 
@@ -31,6 +33,14 @@ export default function Heroes() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     deleteHero(heroToDelete!)
     setShowModal(false)
+  }
+
+  if (status === 'loading') {
+    return <PageSpinner />
+  }
+
+  if (getError || isDeleteError) {
+    return <ErrorComp />
   }
 
   return (

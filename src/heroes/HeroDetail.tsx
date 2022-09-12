@@ -3,6 +3,8 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {FaUndo, FaRegSave} from 'react-icons/fa'
 import InputDetail from 'components/InputDetail'
 import ButtonFooter from 'components/ButtonFooter'
+import PageSpinner from 'components/PageSpinner'
+import ErrorComp from 'components/ErrorComp'
 import {useHeroParams} from 'hooks/useHeroParams'
 import {usePostHero} from 'hooks/usePostHero'
 import {Hero} from 'models/Hero'
@@ -24,6 +26,14 @@ export default function HeroDetail() {
   }
   const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setHero({...hero, description: e.target.value})
+  }
+
+  if (status === 'loading' || isUpdating) {
+    return <PageSpinner />
+  }
+
+  if (postError || isUpdateError) {
+    return <ErrorComp />
   }
 
   return (
