@@ -5,9 +5,10 @@ import {FaEdit, FaRegSave} from 'react-icons/fa'
 import {
   ChangeEvent,
   MouseEvent,
-  startTransition,
+  useTransition,
   useEffect,
   useState,
+  useDeferredValue,
 } from 'react'
 import {Hero} from 'models/Hero'
 
@@ -17,15 +18,18 @@ type HeroListProps = {
 }
 
 export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
-  const [filteredHeroes, setFilteredHeroes] = useState(heroes)
+  const deferredHeroes = useDeferredValue(heroes)
+  const isStale = deferredHeroes !== heroes
+  const [filteredHeroes, setFilteredHeroes] = useState(deferredHeroes)
   const navigate = useNavigate()
+  const [isPending, startTransition] = useTransition()
 
   // needed to refresh the list after deleting a hero
-  useEffect(() => setFilteredHeroes(heroes), [heroes])
+  useEffect(() => setFilteredHeroes(deferredHeroes), [deferredHeroes])
 
   // currying: the outer fn takes our custom arg and returns a fn that takes the event
   const handleSelectHero = (heroId: string) => () => {
-    const hero = heroes.find((h: Hero) => h.id === heroId)
+    const hero = deferredHeroes.find((h: Hero) => h.id === heroId)
     navigate(
       `/heroes/edit-hero/${hero?.id}?name=${hero?.name}&description=${hero?.description}`,
     )
@@ -54,10 +58,15 @@ export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
     }
 
   return (
-    <div>
+    <div
+      style={{
+        opacity: isPending ? 0.5 : 1,
+        color: isStale ? 'dimgray' : 'black',
+      }}
+    >
       <div className="card-content">
         <span>Search </span>
-        <input data-cy="search" onChange={handleSearch(heroes)} />
+        <input data-cy="search" onChange={handleSearch(deferredHeroes)} />
       </div>
       &nbsp;
       <ul data-cy="hero-list" className="list">
