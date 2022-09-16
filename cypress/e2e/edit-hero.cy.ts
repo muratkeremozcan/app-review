@@ -1,3 +1,4 @@
+// cypress/e2e/edit-hero.cy.ts
 import {faker} from '@faker-js/faker'
 import {Hero} from '../../src/models/Hero'
 describe('Edit hero', () => {
@@ -17,7 +18,7 @@ describe('Edit hero', () => {
     Cypress._.random(0, heroes.length - 1)
 
   it('should go through the cancel flow for a random hero (ui-integration)', () => {
-    cy.visitStubbedHeroes()
+    cy.visitStubbedEntities('heroes')
 
     cy.fixture('heroes').then(heroes => {
       const heroIndex = randomHeroIndex(heroes)
@@ -31,7 +32,7 @@ describe('Edit hero', () => {
   })
 
   it('should go through the PUT error flow (ui-integration)', () => {
-    cy.visitStubbedHeroes()
+    cy.visitStubbedEntities('heroes')
 
     cy.fixture('heroes').then(heroes => {
       const heroIndex = randomHeroIndex(heroes)
@@ -51,7 +52,7 @@ describe('Edit hero', () => {
   })
 
   it('should navigate to add from an existing hero (ui-integration)', () => {
-    cy.visitStubbedHeroes()
+    cy.visitStubbedEntities('heroes')
 
     cy.fixture('heroes').then(heroes => {
       const heroIndex = randomHeroIndex(heroes)
@@ -98,7 +99,7 @@ describe('Edit hero', () => {
       .should('contain', editedHero.name)
       .and('contain', editedHero.description)
 
-    cy.getEntityByProperty(newHero.id).then(myHero =>
+    cy.getEntityByProperty('hero', newHero.id).then((myHero: Hero) =>
       cy.crud('DELETE', `heroes/${myHero.id}`),
     )
   })

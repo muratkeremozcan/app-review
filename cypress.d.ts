@@ -1,5 +1,7 @@
+// cypress.d.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {MountOptions, MountReturn} from 'cypress/react'
+import {HeroProperty, VillainProperty, EntityType} from 'models/types'
 import type {Hero} from './cypress/support/commands'
 
 export {}
@@ -42,11 +44,21 @@ declare global {
         options?: MountOptions,
       ): Cypress.Chainable<MountReturn>
 
-      /** Visits baseUrl, uses real network, verifies path */
-      visitHeroes(): Cypress.Chainable<string>
+      /** Mounts the component wrapped by all the providers:
+       * QueryClientProvider, ErrorBoundary, Suspense, BrowserRouter
+       * @param component React Node to mount
+       * @param options Additional options to pass into mount
+       */
+      wrappedMount(
+        component: React.ReactNode,
+        options?: MountOptions,
+      ): Cypress.Chainable<MountReturn>
 
-      /** Visits baseUrl, uses stubbed network, verifies path */
-      visitStubbedHeroes(): Cypress.Chainable<string>
+      /** Visits heroes or villains routes, uses real network, verifies path */
+      visitEntities(entityRoute: EntityRoute): Cypress.Chainable<string>
+
+      /** Visits heroes or villains routes, uses stubbed network, verifies path */
+      visitStubbedEntities(entityRoute: EntityRoute): Cypress.Chainable<string>
 
       /**
        * Gets an entity by name.
@@ -56,16 +68,18 @@ declare global {
        * @param name: Hero['name']
        */
       getEntityByProperty(
-        property: Hero['name'] | Hero['description'] | Hero['id'],
-      ): Cypress.Chainable<Hero>
+        entityType: EntityType,
+        property: HeroProperty | VillainProperty,
+      ): Cypress.Chainable<Hero | Villain>
 
       /**
        * Given a hero property (name, description or id),
        * returns the index of the hero, and the entire collection, as an object.
        */
-      findHeroIndex(
-        property: Hero['name'] | Hero['description'] | Hero['id'],
-      ): Cypress.Chainable<{heroIndex: number; heroesArray: Hero[]}>
+      findEntityIndex(
+        entityType: EntityType,
+        property: HeroProperty,
+      ): Cypress.Chainable<{entityIndex: number; entityArray: Hero[]}>
 
       /**
        * Performs crud operations GET, POST, PUT and DELETE.

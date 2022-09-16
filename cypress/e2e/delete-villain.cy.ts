@@ -1,42 +1,41 @@
-// cypress/e2e/delete-hero.cy.ts
 import {faker} from '@faker-js/faker'
-import {Hero} from '../../src/models/Hero'
-describe('Delete hero', () => {
+import {Villain} from '../../src/models/Villain'
+describe('Delete villain', () => {
   before(cy.resetData)
 
   const yesOnModal = () =>
     cy.getByCy('modal-yes-no').within(() => cy.getByCy('button-yes').click())
 
   it('should go through the cancel flow (ui-integration)', () => {
-    cy.visitStubbedEntities('heroes')
+    cy.visitStubbedEntities('villains')
 
     cy.getByCy('delete-button').first().click()
     cy.getByCy('modal-yes-no').within(() => cy.getByCy('button-no').click())
-    cy.getByCy('heroes').should('be.visible')
+    cy.getByCy('villains').should('be.visible')
     cy.get('modal-yes-no').should('not.exist')
   })
 
   it('should go through the edit flow (ui-e2e)', () => {
-    const hero: Hero = {
+    const villain: Villain = {
       id: faker.datatype.uuid(),
       name: faker.internet.userName(),
       description: `description ${faker.internet.userName()}`,
     }
 
-    cy.crud('POST', 'heroes', {body: hero})
+    cy.crud('POST', 'villains', {body: villain})
 
-    cy.visitEntities('heroes')
+    cy.visitEntities('villains')
 
-    cy.findEntityIndex('hero', hero.id).then(
-      ({entityIndex: heroIndex, entityArray: heroArray}) => {
-        cy.getByCy('delete-button').eq(heroIndex).click()
+    cy.findEntityIndex('villain', villain.id).then(
+      ({entityIndex: villainIndex, entityArray: villainArray}) => {
+        cy.getByCy('delete-button').eq(villainIndex).click()
 
         yesOnModal()
 
-        cy.getByCy('hero-list')
+        cy.getByCy('villain-list')
           .should('be.visible')
-          .should('not.contain', heroArray[heroIndex].name)
-          .and('not.contain', heroArray[heroIndex].description)
+          .should('not.contain', villainArray[villainIndex].name)
+          .and('not.contain', villainArray[villainIndex].description)
       },
     )
   })

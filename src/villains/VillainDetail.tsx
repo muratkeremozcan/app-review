@@ -7,29 +7,33 @@ import PageSpinner from 'components/PageSpinner'
 import ErrorComp from 'components/ErrorComp'
 import {useEntityParams} from 'hooks/useEntityParams'
 import {usePostEntity} from 'hooks/usePostEntity'
-import {Hero} from 'models/Hero'
+import {Villain} from 'models/Villain'
 import {usePutEntity} from 'hooks/usePutEntity'
 
-export default function HeroDetail() {
+export default function VillainDetail() {
   const {id} = useParams()
   const {name, description} = useEntityParams()
-  const [hero, setHero] = useState({id, name, description})
-  const {mutate: createHero, status, error: postError} = usePostEntity('hero')
+  const [villain, setVillain] = useState({id, name, description})
   const {
-    updateEntity: updateHero,
+    mutate: createVillain,
+    status,
+    error: postError,
+  } = usePostEntity('villain')
+  const {
+    updateEntity: updateVillain,
     isUpdating,
     isUpdateError,
-  } = usePutEntity('hero')
+  } = usePutEntity('villain')
 
   const navigate = useNavigate()
-  const handleCancel = () => navigate('/heroes')
+  const handleCancel = () => navigate('/villains')
   const handleSave = () =>
-    name ? updateHero(hero as Hero) : createHero(hero as Hero)
+    name ? updateVillain(villain as Villain) : createVillain(villain as Villain)
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setHero({...hero, name: e.target.value})
+    setVillain({...villain, name: e.target.value})
   }
   const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setHero({...hero, description: e.target.value})
+    setVillain({...villain, description: e.target.value})
   }
 
   if (status === 'loading' || isUpdating) {
@@ -41,7 +45,7 @@ export default function HeroDetail() {
   }
 
   return (
-    <div data-cy="hero-detail" className="card edit-detail">
+    <div data-cy="villain-detail" className="card edit-detail">
       <header className="card-header">
         <p className="card-header-title">{name}</p>
         &nbsp;

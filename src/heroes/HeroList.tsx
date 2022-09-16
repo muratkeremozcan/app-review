@@ -11,6 +11,7 @@ import {
   useDeferredValue,
 } from 'react'
 import {Hero} from 'models/Hero'
+import {HeroProperty} from 'models/types'
 
 type HeroListProps = {
   heroes: Hero[]
@@ -27,7 +28,6 @@ export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
   // needed to refresh the list after deleting a hero
   useEffect(() => setFilteredHeroes(deferredHeroes), [deferredHeroes])
 
-  // currying: the outer fn takes our custom arg and returns a fn that takes the event
   const handleSelectHero = (heroId: string) => () => {
     const hero = deferredHeroes.find((h: Hero) => h.id === heroId)
     navigate(
@@ -36,24 +36,25 @@ export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
   }
 
   /** returns a boolean whether the hero properties exist in the search field */
-  const searchExists = (
-    searchField: string,
-    searchProperty: Hero['name'] | Hero['description'],
-  ) => searchProperty.toLowerCase().indexOf(searchField.toLowerCase()) !== -1
+  const searchExists = (searchProperty: HeroProperty, searchField: string) =>
+    String(searchProperty).toLowerCase().indexOf(searchField.toLowerCase()) !==
+    -1
 
-  /** filters the heroes data to see if the name or the description exists in the list */
+  /** given the data and the search field, returns the data in which the search field exists */
+  const searchProperties = (searchField: string, data: Hero[]) =>
+    [...data].filter((item: Hero) =>
+      Object.values(item).find((property: HeroProperty) =>
+        searchExists(property, searchField),
+      ),
+    )
+
+  /** filters the heroes data to see if the any of the properties exist in the list */
   const handleSearch =
     (data: Hero[]) => (event: ChangeEvent<HTMLInputElement>) => {
       const searchField = event.target.value
 
       return startTransition(() =>
-        setFilteredHeroes(
-          [...data].filter(
-            ({name, description}: Hero) =>
-              searchExists(searchField, name) ||
-              searchExists(searchField, description),
-          ),
-        ),
+        setFilteredHeroes(searchProperties(searchField, data)),
       )
     }
 
@@ -64,10 +65,12 @@ export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
         color: isStale ? 'dimgray' : 'black',
       }}
     >
-      <div className="card-content">
-        <span>Search </span>
-        <input data-cy="search" onChange={handleSearch(deferredHeroes)} />
-      </div>
+      {deferredHeroes.length > 0 && (
+        <div className="card-content">
+          <span>Search </span>
+          <input data-cy="search" onChange={handleSearch(deferredHeroes)} />
+        </div>
+      )}
       &nbsp;
       <ul data-cy="hero-list" className="list">
         {filteredHeroes.map((hero, index) => (

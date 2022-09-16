@@ -1,42 +1,42 @@
-import HeroDetail from './HeroDetail'
+import VillainDetail from './VillainDetail'
 import '../styles.scss'
 
-describe('HeroDetail', () => {
+describe('VillainDetail', () => {
   beforeEach(() => {
-    cy.wrappedMount(<HeroDetail />)
+    cy.wrappedMount(<VillainDetail />)
   })
 
   it('should handle Save', () => {
-    cy.intercept('POST', '*', {statusCode: 200}).as('postHero')
+    cy.intercept('POST', '*', {statusCode: 200}).as('postVillain')
     cy.getByCy('save-button').click()
-    cy.wait('@postHero')
+    cy.wait('@postVillain')
   })
 
   it('should handle non-200 Save', () => {
-    cy.intercept('POST', '*', {statusCode: 400, delay: 100}).as('postHero')
+    cy.intercept('POST', '*', {statusCode: 400, delay: 100}).as('postVillain')
     cy.getByCy('save-button').click()
     cy.getByCy('spinner')
-    cy.wait('@postHero')
+    cy.wait('@postVillain')
     cy.getByCy('error')
   })
 
   it('should handle Cancel', () => {
     cy.getByCy('cancel-button').click()
-    cy.location('pathname').should('eq', '/heroes')
+    cy.location('pathname').should('eq', '/villains')
   })
 
   it('should handle name change', () => {
-    const newHeroName = 'abc'
-    cy.getByCy('input-detail-name').type(newHeroName)
+    const newVillainName = 'abc'
+    cy.getByCy('input-detail-name').type(newVillainName)
 
-    cy.findByDisplayValue(newHeroName).should('be.visible')
+    cy.findByDisplayValue(newVillainName).should('be.visible')
   })
 
   it('should handle description change', () => {
-    const newHeroDescription = '123'
-    cy.getByCy('input-detail-description').type(newHeroDescription)
+    const newVillainDescription = '123'
+    cy.getByCy('input-detail-description').type(newVillainDescription)
 
-    cy.findByDisplayValue(newHeroDescription).should('be.visible')
+    cy.findByDisplayValue(newVillainDescription).should('be.visible')
   })
 
   it('id: false, name: false - should verify the minimal state of the component', () => {
