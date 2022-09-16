@@ -9,7 +9,7 @@ import VillainDetail from './VillainDetail'
 import {useGetEntities} from 'hooks/useGetEntities'
 import {useDeleteEntity} from 'hooks/useDeleteEntity'
 import {Villain} from 'models/Villain'
-import VillainsContext from './VillainsContext'
+import VillainsContext from 'hooks/useVillainsContext'
 
 export default function Villains() {
   const [showModal, setShowModal] = useState<boolean>(false)

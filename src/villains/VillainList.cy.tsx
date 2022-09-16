@@ -1,7 +1,7 @@
 import VillainList from './VillainList'
 import '../styles.scss'
 import villains from '../../cypress/fixtures/villains.json'
-import VillainsContext from './VillainsContext'
+import VillainsContext from 'hooks/useVillainsContext'
 
 describe('VillainList', () => {
   it('no villains should not display a list nor search bar', () => {

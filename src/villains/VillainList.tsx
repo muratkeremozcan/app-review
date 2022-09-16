@@ -1,4 +1,3 @@
-// src/villains/VillainList.tsx
 import {useNavigate} from 'react-router-dom'
 import CardContent from 'components/CardContent'
 import ButtonFooter from 'components/ButtonFooter'
@@ -11,9 +10,8 @@ import {
   useState,
   useDeferredValue,
 } from 'react'
-import {useContext} from 'react'
+import {useVillainsContext} from 'hooks/useVillainsContext'
 import {Villain} from 'models/Villain'
-import VillainsContext from './VillainsContext'
 
 type VillainListProps = {
   handleDeleteVillain: (
@@ -22,7 +20,7 @@ type VillainListProps = {
 }
 
 export default function VillainList({handleDeleteVillain}: VillainListProps) {
-  const villains = useContext(VillainsContext)
+  const [villains] = useVillainsContext()
 
   const deferredVillains = useDeferredValue(villains)
   const isStale = deferredVillains !== villains
@@ -33,6 +31,7 @@ export default function VillainList({handleDeleteVillain}: VillainListProps) {
   // needed to refresh the list after deleting a villain
   useEffect(() => setFilteredVillains(deferredVillains), [deferredVillains])
 
+  // currying: the outer fn takes our custom arg and returns a fn that takes the event
   const handleSelectVillain = (villainId: string) => () => {
     const villain = deferredVillains.find((h: Villain) => h.id === villainId)
     navigate(
