@@ -1,4 +1,3 @@
-// src/villains/Villains.tsx
 import {useState} from 'react'
 import {useNavigate, Routes, Route} from 'react-router-dom'
 import ListHeader from 'components/ListHeader'
@@ -10,6 +9,7 @@ import VillainDetail from './VillainDetail'
 import {useGetEntities} from 'hooks/useGetEntities'
 import {useDeleteEntity} from 'hooks/useDeleteEntity'
 import {Villain} from 'models/Villain'
+import VillainsContext from './VillainsContext'
 
 export default function Villains() {
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -53,28 +53,24 @@ export default function Villains() {
       />
       <div>
         <div>
-          <Routes>
-            <Route
-              path=""
-              element={
-                <VillainList
-                  villains={villains}
-                  handleDeleteVillain={handleDeleteVillain}
-                />
-              }
-            />
-            <Route path="/add-villain" element={<VillainDetail />} />
-            <Route path="/edit-villain/:id" element={<VillainDetail />} />
-            <Route
-              path="*"
-              element={
-                <VillainList
-                  villains={villains}
-                  handleDeleteVillain={handleDeleteVillain}
-                />
-              }
-            />
-          </Routes>
+          <VillainsContext.Provider value={villains}>
+            <Routes>
+              <Route
+                path=""
+                element={
+                  <VillainList handleDeleteVillain={handleDeleteVillain} />
+                }
+              />
+              <Route path="/add-villain" element={<VillainDetail />} />
+              <Route path="/edit-villain/:id" element={<VillainDetail />} />
+              <Route
+                path="*"
+                element={
+                  <VillainList handleDeleteVillain={handleDeleteVillain} />
+                }
+              />
+            </Routes>
+          </VillainsContext.Provider>
         </div>
       </div>
 

@@ -1,3 +1,4 @@
+// src/villains/VillainList.tsx
 import {useNavigate} from 'react-router-dom'
 import CardContent from 'components/CardContent'
 import ButtonFooter from 'components/ButtonFooter'
@@ -10,20 +11,19 @@ import {
   useState,
   useDeferredValue,
 } from 'react'
+import {useContext} from 'react'
 import {Villain} from 'models/Villain'
-import {VillainProperty} from 'models/types'
+import VillainsContext from './VillainsContext'
 
 type VillainListProps = {
-  villains: Villain[]
   handleDeleteVillain: (
     villain: Villain,
   ) => (e: MouseEvent<HTMLButtonElement>) => void
 }
 
-export default function VillainList({
-  villains,
-  handleDeleteVillain,
-}: VillainListProps) {
+export default function VillainList({handleDeleteVillain}: VillainListProps) {
+  const villains = useContext(VillainsContext)
+
   const deferredVillains = useDeferredValue(villains)
   const isStale = deferredVillains !== villains
   const [filteredVillains, setFilteredVillains] = useState(deferredVillains)
@@ -39,6 +39,11 @@ export default function VillainList({
       `/villains/edit-villain/${villain?.id}?name=${villain?.name}&description=${villain?.description}`,
     )
   }
+
+  type VillainProperty =
+    | Villain['name']
+    | Villain['description']
+    | Villain['id']
 
   /** returns a boolean whether the villain properties exist in the search field */
   const searchExists = (searchProperty: VillainProperty, searchField: string) =>
