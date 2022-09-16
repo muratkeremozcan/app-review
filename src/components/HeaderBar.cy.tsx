@@ -1,9 +1,9 @@
 import HeaderBar from './HeaderBar'
-import {BrowserRouter} from 'react-router-dom'
 import '../styles.scss'
+import {BrowserRouter} from 'react-router-dom'
 
 describe('HeaderBar', () => {
-  it('should', () => {
+  it('should render', () => {
     cy.mount(
       <BrowserRouter>
         <HeaderBar />

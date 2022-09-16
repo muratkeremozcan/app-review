@@ -7,25 +7,12 @@ describe('Delete hero', () => {
     cy.getByCy('modal-yes-no').within(() => cy.getByCy('button-yes').click())
 
   it('should go through the cancel flow (ui-integration)', () => {
-    cy.visitStubbedHeroes()
+    cy.visitStubbedEntities('heroes')
 
     cy.getByCy('delete-button').first().click()
     cy.getByCy('modal-yes-no').within(() => cy.getByCy('button-no').click())
     cy.getByCy('heroes').should('be.visible')
     cy.get('modal-yes-no').should('not.exist')
-  })
-
-  it('should go through the DELETE error flow (ui-integration)', () => {
-    cy.visitStubbedHeroes()
-    cy.intercept('DELETE', `${Cypress.env('API_URL')}/heroes/*`, {
-      statusCode: 500,
-    }).as('isDeleteError')
-
-    cy.getByCy('delete-button').eq(0).click()
-    yesOnModal()
-
-    cy.wait('@isDeleteError')
-    cy.getByCy('error')
   })
 
   it('should go through the edit flow (ui-e2e)', () => {
@@ -37,17 +24,19 @@ describe('Delete hero', () => {
 
     cy.crud('POST', 'heroes', {body: hero})
 
-    cy.visitHeroes()
+    cy.visitEntities('heroes')
 
-    cy.findHeroIndex(hero.id).then(({heroIndex, heroesArray}) => {
-      cy.getByCy('delete-button').eq(heroIndex).click()
+    cy.findEntityIndex('hero', hero.id).then(
+      ({entityIndex: heroIndex, entityArray: heroArray}) => {
+        cy.getByCy('delete-button').eq(heroIndex).click()
 
-      yesOnModal()
+        yesOnModal()
 
-      cy.getByCy('hero-list')
-        .should('be.visible')
-        .should('not.contain', heroesArray[heroIndex].name)
-        .and('not.contain', heroesArray[heroIndex].description)
-    })
+        cy.getByCy('hero-list')
+          .should('be.visible')
+          .should('not.contain', heroArray[heroIndex].name)
+          .and('not.contain', heroArray[heroIndex].description)
+      },
+    )
   })
 })

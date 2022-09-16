@@ -1,27 +1,8 @@
-import {Suspense} from 'react'
 import Heroes from './Heroes'
-import {BrowserRouter} from 'react-router-dom'
-import {QueryClient, QueryClientProvider} from 'react-query'
-import {ErrorBoundary} from 'react-error-boundary'
-import ErrorComp from 'components/ErrorComp'
-import PageSpinner from 'components/PageSpinner'
 import '../styles.scss'
 
 describe('Heroes', () => {
-  const mounter = (queryClient: QueryClient) =>
-    cy.mount(
-      <QueryClientProvider client={queryClient}>
-        <ErrorBoundary fallback={<ErrorComp />}>
-          <Suspense fallback={<PageSpinner />}>
-            <BrowserRouter>
-              <Heroes />
-            </BrowserRouter>
-          </Suspense>
-        </ErrorBoundary>
-      </QueryClientProvider>,
-    )
-
-  it('should go through the error flow', () => {
+  it('should see error on initial load with GET', () => {
     Cypress.on('uncaught:exception', () => false)
     cy.clock()
     cy.intercept('GET', `${Cypress.env('API_URL')}/heroes`, {
@@ -29,7 +10,7 @@ describe('Heroes', () => {
       delay: 100,
     }).as('notFound')
 
-    mounter(new QueryClient())
+    cy.wrappedMount(<Heroes />)
 
     cy.getByCy('page-spinner').should('be.visible')
     Cypress._.times(4, () => {
@@ -46,7 +27,7 @@ describe('Heroes', () => {
         fixture: 'heroes.json',
       }).as('getHeroes')
 
-      mounter(new QueryClient())
+      cy.wrappedMount(<Heroes />)
     })
 
     it('should display the hero list on render, and go through hero add & refresh flow', () => {
@@ -66,7 +47,7 @@ describe('Heroes', () => {
       cy.getByCy('delete-button').first().click()
       cy.getByCy('modal-yes-no').should('be.visible')
     }
-    it('should go through the modal flow', () => {
+    it('should go through the modal flow, and cover error on DELETE', () => {
       cy.getByCy('modal-yes-no').should('not.exist')
 
       cy.log('do not delete flow')
@@ -76,11 +57,12 @@ describe('Heroes', () => {
 
       cy.log('delete flow')
       invokeHeroDelete()
-      cy.intercept('DELETE', '*', {statusCode: 200}).as('deleteHero')
+      cy.intercept('DELETE', '*', {statusCode: 500}).as('deleteHero')
 
       cy.getByCy('button-yes').click()
       cy.wait('@deleteHero')
       cy.getByCy('modal-yes-no').should('not.exist')
+      cy.getByCy('error').should('be.visible')
     })
   })
 })
