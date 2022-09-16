@@ -26,7 +26,7 @@ export default function Villains() {
     setVillainToDelete(null)
     setShowModal(false)
   }
-
+  // currying: the outer fn takes our custom arg and returns a fn that takes the event
   const handleDeleteVillain = (villain: Villain) => () => {
     setVillainToDelete(villain)
     setShowModal(true)

@@ -1,4 +1,3 @@
-// cypress/support/commands.ts
 import {Villain} from './../../src/models/Villain'
 import {Hero} from '../../src/models/Hero'
 import {

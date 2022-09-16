@@ -1,4 +1,3 @@
-// cypress/e2e/delete-hero.cy.ts
 import {faker} from '@faker-js/faker'
 import {Hero} from '../../src/models/Hero'
 describe('Delete hero', () => {

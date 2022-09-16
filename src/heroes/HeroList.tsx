@@ -28,6 +28,7 @@ export default function HeroList({heroes, handleDeleteHero}: HeroListProps) {
   // needed to refresh the list after deleting a hero
   useEffect(() => setFilteredHeroes(deferredHeroes), [deferredHeroes])
 
+  // currying: the outer fn takes our custom arg and returns a fn that takes the event
   const handleSelectHero = (heroId: string) => () => {
     const hero = deferredHeroes.find((h: Hero) => h.id === heroId)
     navigate(

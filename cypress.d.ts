@@ -1,4 +1,3 @@
-// cypress.d.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {MountOptions, MountReturn} from 'cypress/react'
 import {HeroProperty, VillainProperty, EntityType} from 'models/types'

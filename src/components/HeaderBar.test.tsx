@@ -1,14 +1,14 @@
 import HeaderBar from './HeaderBar'
-import '../styles.scss'
+import {render, screen} from '@testing-library/react'
 import {BrowserRouter} from 'react-router-dom'
 
 describe('HeaderBar', () => {
-  it('should render', () => {
-    cy.mount(
+  it('should render error', async () => {
+    render(
       <BrowserRouter>
         <HeaderBar />
       </BrowserRouter>,
     )
-    cy.getByCy('header-bar-brand')
+    expect(await screen.findByTestId('header-bar-brand')).toBeVisible()
   })
 })

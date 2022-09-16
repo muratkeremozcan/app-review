@@ -1,4 +1,3 @@
-// src/hooks/useVillainsContext.ts
 import {createContext, useContext, SetStateAction, Dispatch} from 'react'
 import {Villain} from 'models/Villain'
 

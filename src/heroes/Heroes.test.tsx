@@ -1,4 +1,3 @@
-// src/heroes/Heroes.test.tsx
 import Heroes from './Heroes'
 import {wrappedRender, screen, waitForElementToBeRemoved} from 'test-utils'
 import userEvent from '@testing-library/user-event'

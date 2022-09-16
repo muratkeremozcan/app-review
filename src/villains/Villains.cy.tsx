@@ -1,66 +1,68 @@
-import VillainList from './VillainList'
+import Villains from './Villains'
 import '../styles.scss'
-import villains from '../../cypress/fixtures/villains.json'
-import VillainsContext from 'hooks/useVillainsContext'
 
-describe('VillainList', () => {
-  it('no villains should not display a list nor search bar', () => {
-    cy.wrappedMount(
-      <VillainList handleDeleteVillain={cy.stub().as('handleDeleteVillain')} />,
-    )
+describe('Villains', () => {
+  it('should see error on initial load with GET', () => {
+    Cypress.on('uncaught:exception', () => false)
+    cy.clock()
+    cy.intercept('GET', `${Cypress.env('API_URL')}/villains`, {
+      statusCode: 400,
+      delay: 100,
+    }).as('notFound')
 
-    cy.getByCy('villain-list').should('exist')
-    cy.getByCyLike('villain-list-item').should('not.exist')
-    cy.getByCy('search').should('not.exist')
+    cy.wrappedMount(<Villains />)
+
+    cy.getByCy('page-spinner').should('be.visible')
+    Cypress._.times(4, () => {
+      cy.tick(5000)
+      cy.wait('@notFound')
+    })
+
+    cy.getByCy('error')
   })
 
-  context('with villains in the list', () => {
+  context('200 flows', () => {
     beforeEach(() => {
-      cy.wrappedMount(
-        <VillainsContext.Provider value={villains}>
-          <VillainList
-            handleDeleteVillain={cy.stub().as('handleDeleteVillain')}
-          />
-        </VillainsContext.Provider>,
-      )
+      cy.intercept('GET', `${Cypress.env('API_URL')}/villains`, {
+        fixture: 'villains.json',
+      }).as('getVillains')
+
+      cy.wrappedMount(<Villains />)
     })
 
-    it('should render the villain layout', () => {
-      cy.getByCyLike('villain-list-item').should('have.length', villains.length)
+    it('should display the villain list on render, and go through villain add & refresh flow', () => {
+      cy.wait('@getVillains')
 
-      cy.getByCy('card-content')
-      cy.contains(villains[0].name)
-      cy.contains(villains[0].description)
+      cy.getByCy('list-header').should('be.visible')
+      cy.getByCy('villain-list').should('be.visible')
 
-      cy.get('footer').within(() => {
-        cy.getByCy('delete-button')
-        cy.getByCy('edit-button')
-      })
+      cy.getByCy('add-button').click()
+      cy.location('pathname').should('eq', '/villains/add-villain')
+
+      cy.getByCy('refresh-button').click()
+      cy.location('pathname').should('eq', '/villains')
     })
 
-    it('should search and filter villain by name and description', () => {
-      cy.getByCy('search').type(villains[0].name)
-      cy.getByCyLike('villain-list-item')
-        .should('have.length', 1)
-        .contains(villains[0].name)
-
-      cy.getByCy('search').clear().type(villains[2].description)
-      cy.getByCyLike('villain-list-item')
-        .should('have.length', 1)
-        .contains(villains[2].description)
-    })
-
-    it('should handle delete', () => {
+    const invokeVillainDelete = () => {
       cy.getByCy('delete-button').first().click()
-      cy.get('@handleDeleteVillain').should('have.been.called')
-    })
+      cy.getByCy('modal-yes-no').should('be.visible')
+    }
+    it('should go through the modal flow, and cover error on DELETE', () => {
+      cy.getByCy('modal-yes-no').should('not.exist')
 
-    it('should handle edit', () => {
-      cy.getByCy('edit-button').first().click()
-      cy.location('pathname').should(
-        'eq',
-        '/villains/edit-villain/' + villains[0].id,
-      )
+      cy.log('do not delete flow')
+      invokeVillainDelete()
+      cy.getByCy('button-no').click()
+      cy.getByCy('modal-yes-no').should('not.exist')
+
+      cy.log('delete flow')
+      invokeVillainDelete()
+      cy.intercept('DELETE', '*', {statusCode: 500}).as('deleteVillain')
+
+      cy.getByCy('button-yes').click()
+      cy.wait('@deleteVillain')
+      cy.getByCy('modal-yes-no').should('not.exist')
+      cy.getByCy('error').should('be.visible')
     })
   })
 })

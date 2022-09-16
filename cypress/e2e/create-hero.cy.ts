@@ -1,4 +1,3 @@
-// cypress/e2e/create-hero.cy.ts
 import {faker} from '@faker-js/faker'
 describe('Create hero', () => {
   before(cy.resetData)
