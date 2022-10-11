@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom'
 import {createItem} from '../api/api'
 
 /**
- * Helper for simple POST to `/heroes`, `/villains`, `/theboys` routes
+ * Helper for simple POST to `/heroes`, `/villains`, `/boys` routes
  * @returns {object} {mutate, status, error}
  */
 export function usePostEntity(entityType: EntityType) {
@@ -30,11 +30,3 @@ export function usePostEntity(entityType: EntityType) {
     },
   })
 }
-
-// why useMutation?
-// useParams and useQuery fetch state: UI state <- server/url , and caches it
-// useMutation is just the opposite: UI state -> server , and still caches it
-// yields data, status, error just like useQuery (10.4.2)
-// const { dataToMutate, status, error } = useMutation((item) => createItem(url, item)
-// the first arg is a function that that executes a non-idempotent request
-// the second arg is an object with onSuccess property
