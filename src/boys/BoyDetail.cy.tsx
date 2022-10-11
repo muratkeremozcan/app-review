@@ -1,11 +1,11 @@
-import VillainDetail from './VillainDetail'
+import BoyDetail from './BoyDetail'
 import '../styles.scss'
 import React from 'react'
 import * as postHook from 'hooks/usePostEntity'
 
-describe('VillainDetail', () => {
+describe('BoyDetail', () => {
   beforeEach(() => {
-    cy.wrappedMount(<VillainDetail />)
+    cy.wrappedMount(<BoyDetail />)
   })
 
   it('should handle Save', () => {
@@ -13,41 +13,41 @@ describe('VillainDetail', () => {
     cy.spy(React, 'useState').as('useState')
     cy.spy(postHook, 'usePostEntity').as('usePostEntity')
     // instead prefer to test at a higher level
-    cy.intercept('POST', '*', {statusCode: 200}).as('postVillain')
+    cy.intercept('POST', '*', {statusCode: 200}).as('postBoy')
     cy.getByCy('save-button').click()
 
     // test at a higher level
-    cy.wait('@postVillain')
+    cy.wait('@postBoy')
     // test implementation details (what not to do)
     cy.get('@useState').should('have.been.called')
     cy.get('@usePostEntity').should('have.been.called')
   })
 
   it('should handle non-200 Save', () => {
-    cy.intercept('POST', '*', {statusCode: 400, delay: 100}).as('postVillain')
+    cy.intercept('POST', '*', {statusCode: 400, delay: 100}).as('postBoy')
     cy.getByCy('save-button').click()
     cy.getByCy('spinner')
-    cy.wait('@postVillain')
+    cy.wait('@postBoy')
     cy.getByCy('error')
   })
 
   it('should handle Cancel', () => {
     cy.getByCy('cancel-button').click()
-    cy.location('pathname').should('eq', '/villains')
+    cy.location('pathname').should('eq', '/boys')
   })
 
   it('should handle name change', () => {
-    const newVillainName = 'abc'
-    cy.getByCy('input-detail-name').type(newVillainName)
+    const newBoyName = 'abc'
+    cy.getByCy('input-detail-name').type(newBoyName)
 
-    cy.findByDisplayValue(newVillainName).should('be.visible')
+    cy.findByDisplayValue(newBoyName).should('be.visible')
   })
 
   it('should handle description change', () => {
-    const newVillainDescription = '123'
-    cy.getByCy('input-detail-description').type(newVillainDescription)
+    const newBoyDescription = '123'
+    cy.getByCy('input-detail-description').type(newBoyDescription)
 
-    cy.findByDisplayValue(newVillainDescription).should('be.visible')
+    cy.findByDisplayValue(newBoyDescription).should('be.visible')
   })
 
   it('id: false, name: false - should verify the minimal state of the component', () => {

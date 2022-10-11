@@ -1,21 +1,21 @@
-import Heroes from './Heroes'
+import Boys from './Boys'
 import {wrappedRender, screen, waitForElementToBeRemoved} from 'test-utils'
 import userEvent from '@testing-library/user-event'
 import {rest} from 'msw'
 import {setupServer} from 'msw/node'
-import {heroes} from '../../db.json'
+import {boys} from '../../db.json'
 
-describe('Heroes', () => {
+describe('Boys', () => {
   // mute the expected console.error message, because we are mocking non-200 responses
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   jest.spyOn(console, 'error').mockImplementation(() => {})
 
-  beforeEach(() => wrappedRender(<Heroes />))
+  beforeEach(() => wrappedRender(<Boys />))
 
   it('should see error on initial load with GET', async () => {
     const handlers = [
       rest.get(
-        `${process.env.REACT_APP_API_URL}/heroes`,
+        `${process.env.REACT_APP_API_URL}/boys`,
         async (_req, res, ctx) => res(ctx.status(400)),
       ),
     ]
@@ -44,11 +44,11 @@ describe('Heroes', () => {
   describe('200 flows', () => {
     const handlers = [
       rest.get(
-        `${process.env.REACT_APP_API_URL}/heroes`,
-        async (_req, res, ctx) => res(ctx.status(200), ctx.json(heroes)),
+        `${process.env.REACT_APP_API_URL}/boys`,
+        async (_req, res, ctx) => res(ctx.status(200), ctx.json(boys)),
       ),
       rest.delete(
-        `${process.env.REACT_APP_API_URL}/heroes/${heroes[0].id}`, // use /.*/ for all requests
+        `${process.env.REACT_APP_API_URL}/boys/${boys[0].id}`, // use /.*/ for all requests
         async (_req, res, ctx) =>
           res(ctx.status(400), ctx.json('expected error')),
       ),
@@ -62,21 +62,21 @@ describe('Heroes', () => {
     afterEach(server.resetHandlers)
     afterAll(server.close)
 
-    it('should display the hero list on render, and go through hero add & refresh flow', async () => {
+    it('should display the boy list on render, and go through boy add & refresh flow', async () => {
       expect(await screen.findByTestId('list-header')).toBeVisible()
-      expect(await screen.findByTestId('hero-list')).toBeVisible()
+      expect(await screen.findByTestId('boy-list')).toBeVisible()
 
       await userEvent.click(await screen.findByTestId('add-button'))
-      expect(window.location.pathname).toBe('/heroes/add-hero')
+      expect(window.location.pathname).toBe('/boys/add-boy')
 
       await userEvent.click(await screen.findByTestId('refresh-button'))
-      expect(window.location.pathname).toBe('/heroes')
+      expect(window.location.pathname).toBe('/boys')
     })
 
     const deleteButtons = async () => screen.findAllByTestId('delete-button')
     const modalYesNo = async () => screen.findByTestId('modal-yes-no')
     const maybeModalYesNo = () => screen.queryByTestId('modal-yes-no')
-    const invokeHeroDelete = async () => {
+    const invokeBoyDelete = async () => {
       userEvent.click((await deleteButtons())[0])
       expect(await modalYesNo()).toBeVisible()
     }
@@ -84,11 +84,11 @@ describe('Heroes', () => {
     it('should go through the modal flow, and cover error on DELETE', async () => {
       expect(screen.queryByTestId('modal-dialog')).not.toBeInTheDocument()
 
-      await invokeHeroDelete()
+      await invokeBoyDelete()
       await userEvent.click(await screen.findByTestId('button-no'))
       expect(maybeModalYesNo()).not.toBeInTheDocument()
 
-      await invokeHeroDelete()
+      await invokeBoyDelete()
       await userEvent.click(await screen.findByTestId('button-yes'))
 
       expect(maybeModalYesNo()).not.toBeInTheDocument()
