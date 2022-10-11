@@ -2,7 +2,7 @@ import {Hero} from 'models/Hero'
 import {EntityType} from 'models/types'
 import {useMutation, useQueryClient} from 'react-query'
 import {useNavigate} from 'react-router-dom'
-import {createItem} from './api'
+import {createItem} from '../api/api'
 
 /**
  * Helper for simple POST to `/heroes` route

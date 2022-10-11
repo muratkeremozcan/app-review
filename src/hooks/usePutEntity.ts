@@ -2,7 +2,7 @@ import {Hero} from 'models/Hero'
 import {useMutation, useQueryClient} from 'react-query'
 import type {QueryClient} from 'react-query'
 import {useNavigate} from 'react-router-dom'
-import {editItem} from './api'
+import {editItem} from '../api/api'
 import {Villain} from 'models/Villain'
 import {EntityType} from 'models/types'
 

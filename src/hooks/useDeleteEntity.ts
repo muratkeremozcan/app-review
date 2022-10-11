@@ -3,7 +3,7 @@ import {EntityType} from 'models/types'
 import {Villain} from 'models/Villain'
 import {useMutation, useQueryClient} from 'react-query'
 import {useNavigate} from 'react-router-dom'
-import {deleteItem} from './api'
+import {deleteItem} from '../api/api'
 
 /**
  * Helper for DELETE to `/heroes` or `/villains` routes.
